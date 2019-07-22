@@ -1,0 +1,289 @@
+create table Instrument (
+InstrumentId int,
+Name varchar(50),
+ISIN varchar(50),
+ParentInstrumentId int,
+IdentifierType varchar(50),
+IdentifierValue varchar(50),
+TypeId int,
+FromDate date,
+ToDate date)
+
+create table InstrumentType (
+ITypeId int,
+TypeTable VARCHAR(50),
+RiskProfileId int
+)
+
+create table InstrumentRegulation (
+InstrumentId int,
+RegulationId int,
+RiskProfileId int,
+FromDate date,
+ToDate date
+)
+
+create table Portfolio (
+PortfolioId int,
+Name varchar(50),
+InstrumentIds varchar(100),
+IndustryType varchar(50),
+Sector varchar(50),
+RiskProfileId int,
+RegulationId int,
+FromDate date,
+ToDate date
+)
+
+create table Account (
+AccountId int(11) AUTO_INCREMENT PRIMARY KEY not null,
+Name varchar(50),
+ClientId int,
+RegulationId int,
+AcType varchar(50),
+CurrencyId 	char(3),
+RegionId int,
+PresentTotalValue decimal(50, 10),
+PrincipalValue decimal(50, 10),
+ECL decimal(50, 10),
+ECL12Month decimal(50, 10),
+ECLLongTerm decimal(50, 10),
+LGD decimal(50, 10),
+EAD decimal(50, 10),
+FromDate date,
+ToDate date
+) 
+
+create table AccountDetail (
+AccountId int,
+AcDetailId int(11) AUTO_INCREMENT PRIMARY KEY not null,
+Name varchar(50),
+InstrumentId int,
+CurrencyId 	char(3),
+RegionId int,
+PresentValue decimal(50, 10),
+PrincipalValue decimal(50, 10),
+Status varchar(50),
+RealizedGain decimal(50, 10),
+UnRealizedGain decimal(50, 10),
+ECL decimal(50, 10),
+ECL12Month decimal(50, 10),
+ECLLongTerm decimal(50, 10),
+LGD decimal(50, 10),
+EAD decimal(50, 10),
+FromDate date,
+ToDate date
+) 
+
+create table Regulation (
+RegulationId int,
+Name varchar(50),
+Description varchar(250),
+RegionId int,
+FromDate date,
+ToDate date
+)
+
+create table RegulationRule (
+RuleId int,
+RegulationId int,
+Name varchar(50),
+Description varchar(200),
+InstrumentType varchar(50),
+FromDate date,
+ToDate date
+)
+
+create table Organization (
+OrganizationId int,
+Name varchar(50),
+RegulationId int,
+RegionId int,
+FromDate date,
+ToDate date
+)
+
+create table OrganizationDetail (
+OrganizationId int,
+OrgDetailId int,
+RegulationId int,
+AccountId int,
+CurrencyId char(3),
+RegionId int,
+ECL decimal(50, 10),
+ECL12Month decimal(50, 10),
+ECLLongTerm decimal(50, 10),
+FromDate date,
+ToDate date
+)
+
+create table ECLRun (
+RunId  int(11) unsigned AUTO_INCREMENT PRIMARY KEY not null,
+Name varchar(50),
+Description varchar(50),
+QuantModelId  int,
+RegulationId int,
+RiskProfileId int,
+Id int,
+IdType varchar(50),
+RegionId int,
+ECL decimal(50, 10),
+ECL12Month decimal(50, 10),
+ECLLongTerm decimal(50, 10),
+FromDate date,
+ToDate date
+)
+
+create table ECLRunDetail (
+RunId  int(11),
+Name varchar(50),
+RunDetailId  int(11) unsigned AUTO_INCREMENT PRIMARY KEY not null,
+Id  int,
+IdType varchar(50),
+ECL decimal(50, 10),
+ECL12Month decimal(50, 10),
+ECLLongTerm decimal(50, 10),
+FromDate date,
+ToDate date,
+RiskProfileId INT(10),
+RiskProfileId INT(11)
+)
+
+create table QuantModel (
+QuantModelId int unsigned,
+Name varchar(50),
+Description varchar(250),
+FromDate date,
+ToDate date
+)
+
+create table QuantModelDetail (
+QuantModelDetailId int unsigned,
+QuantModelId int unsigned,
+Name varchar(50),
+Description varchar(250),
+Coefficient1 varchar(50),
+Coefficient2 varchar(50),
+Coefficient3 varchar(50),
+Coefficient4 varchar(50),
+Coefficient5 varchar(50),
+OutputValue1 decimal(10, 9),
+OutputValue2 decimal(10, 9),
+OutputValue3 decimal(10, 9),
+OutputValue4 decimal(10, 9),
+OutputValue5 decimal(10, 9),
+FromDate date,
+ToDate date
+)
+
+create table RiskFactor (
+RiskFactorId int unsigned,
+Name varchar(50),
+RegionId int,
+CurrencyId char(3),
+RiskGroup varchar(100),
+QuantModelId int unsigned,
+FromDate date,
+ToDate date
+)
+
+create table RiskFactorRelation (
+RiskFactorId int unsigned,
+ParentRiskFactorId int unsigned,
+AssociatedRiskFactorIds varchar(100)
+)
+
+create table RiskProfile (
+RiskProfileId int unsigned,
+Name varchar(50),
+Description varchar(250),
+RiskFactors varchar(250),
+FromDate date,
+ToDate date
+)
+
+create table Region (
+RegionId int unsigned,
+Name varchar(50),
+Description varchar(250),
+CurrencyId char(3),
+State varchar(50),
+Country varchar(50),
+ZipCode varchar(50),
+FromDate date,
+ToDate date
+)
+
+create table Currency (
+CurrencyId char(3),
+Name varchar(50),
+NumericCode int,
+RegionId int unsigned,
+USDRate decimal(50,10),
+FromDate date,
+ToDate date
+)
+
+create table Bonds (
+BondId int(11) unsigned AUTO_INCREMENT PRIMARY KEY not null,
+ISIN varchar(25),
+InstrumentTypeId int unsigned,
+Description varchar(250),
+Category varchar(100),
+SubCategory varchar(100),
+DebtType varchar(200),
+IndustryGroup varchar(200),
+IndustrySubGroup varchar(200),
+CurrencyId char(3),
+RegionId int unsigned,
+Status varchar(50),
+Secured tinyint(1),
+MoodyRating varchar(50),
+SPRating varchar(50),
+FitchRating varchar(50),
+PaymentFrequency varchar(50),
+MaturityDate date,
+CouponRate decimal(10, 9),
+Callable tinyint(1),
+MaturityAmount decimal(50,10),
+FaceValue decimal(50,10),
+Yield decimal(10,9),
+OutstandingAmount decimal(50,10)
+)
+ 
+create table LGDCoefficients (
+LgdId int unsigned,
+Category varchar(100),
+Months int,
+MaturityMin int,
+MaturityMax int default 100,
+MoodyRating varchar(50),
+LgdValue decimal(10,9),
+LgdIFRS decimal(10,9),
+LgdGAAP decimal(10, 9),
+LgdBasel decimal(10, 9)
+)
+
+create table PD (
+PDId int unsigned,
+Name varchar(50),
+RiskFactorId int unsigned,
+MoodyRatingMin varchar(50),
+MoodyRatingMax varchar(50),
+Month int,
+PdIFRS decimal(10, 9),
+PdGAAP decimal(10, 9),
+PdBasel decimal(10, 9),
+PDValue decimal(10,9)
+)
+
+create table ASN (
+Id int unsigned,
+InstallDate date,
+RegionId int unsigned,
+CurrencyId char(3)
+)
+
+
+
+
